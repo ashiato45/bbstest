@@ -6,6 +6,10 @@ import (
     "log"
     "net/http"
     "strings"
+    "time"
+    "crypto/md5"
+    "strconv"
+    "io"
 )
 
 func putData(w http.ResponseWriter, r * http.Request){
@@ -26,8 +30,13 @@ func sayRoot(w http.ResponseWriter, r *http.Request){
     }else{
         putData(w, r)
     }
+    crutime := time.Now().Unix()
+    h := md5.New()
+    io.WriteString(h, strconv.FormatInt(crutime, 10))
+    token := fmt.Sprintf("%x", h.Sum(nil))
+    
     t, _ := template.ParseFiles("test.gtpl")
-    t.Execute(w, nil)
+    t.Execute(w, token)
 }
 
 func main(){
