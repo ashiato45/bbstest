@@ -2,14 +2,32 @@ package main
 
 import (
     "fmt"
-    //"html/template"
+    "html/template"
     "log"
     "net/http"
-    //"strings"
+    "strings"
 )
 
+func putData(w http.ResponseWriter, r * http.Request){
+    r.ParseForm()
+    fmt.Println(r.Form)
+    fmt.Println("path", r.URL.Path)
+    fmt.Println("scheme", r.URL.Scheme)
+    fmt.Println(r.Form["url_Long"])
+    for k, v := range r.Form{
+        fmt.Println("key:", k)
+        fmt.Println("val:", strings.Join(v, ""))
+    }
+}
+
+
 func sayRoot(w http.ResponseWriter, r *http.Request){
-    fmt.Fprintf(w, "Hello, world!")
+    if r.Method == "GET"{
+    }else{
+        putData(w, r)
+    }
+    t, _ := template.ParseFiles("test.gtpl")
+    t.Execute(w, nil)
 }
 
 func main(){
